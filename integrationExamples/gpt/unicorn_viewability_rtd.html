@@ -1,0 +1,200 @@
+<html>
+
+<head>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <script async src="//www.googletagservices.com/tag/js/gpt.js"></script>
+    <script type="text/javascript" src="../../build/dev/prebid.js" async></script>
+
+    <script>
+        var div_1_sizes = [
+            [300, 250], [336, 280], [320, 50]
+        ];
+        var div_2_sizes = [
+            [300, 250], [336, 280], [320, 50]
+        ];
+        var div_3_sizes = [
+            [300, 250], [336, 280], [320, 50]
+        ];
+        var PREBID_TIMEOUT = 1000;
+        var FAILSAFE_TIMEOUT = 3000;
+
+        // NOTE: adUnit code は GPT スロットパス、表示先 div は div-1/2/3 と「食い違う」レイアウト。
+        // RTD が枠位置を計測する div を確実に解決できるよう ortb2Imp.ext.data.divId を明示する。
+        // (これを省いても GPT スロットが定義済みなら getSlotElementId() で自動解決される)
+        var adUnits = [
+            {
+                code: '/19968336/header-bid-tag-0',
+                mediaTypes: {
+                    banner: {
+                        sizes: div_1_sizes
+                    }
+                },
+                ortb2Imp: { ext: { data: { divId: 'div-1' } } },
+                bids: [
+                    {
+                        bidder: 'unicorn',
+                        params: {
+                            placementId: 'rectangle-ad-1',
+                            bidfloorCpm: 0,
+                            accountId: 199578,
+                            publisherId: 199578,
+                            mediaId: "aaaa1"
+                        }
+                    }]
+            },
+            {
+                code: '/19968336/header-bid-tag-1',
+                mediaTypes: {
+                    banner: {
+                        sizes: div_2_sizes
+                    }
+                },
+                ortb2Imp: { ext: { data: { divId: 'div-2' } } },
+                bids: [
+                    {
+                        bidder: 'unicorn',
+                        params: {
+                            placementId: 'rectangle-ad-2',
+                            bidfloorCpm: 0,
+                            accountId: 199578,
+                            publisherId: 199578,
+                            mediaId: "aaaa1"
+                        }
+                }]
+            },
+            {
+                code: '/19968336/header-bid-tag-2',
+                mediaTypes: {
+                    banner: {
+                        sizes: div_3_sizes
+                    }
+                },
+                ortb2Imp: { ext: { data: { divId: 'div-3' } } },
+                bids: [
+                    {
+                        bidder: 'unicorn',
+                        params: {
+                            placementId: 'rectangle-ad-3',
+                            bidfloorCpm: 0,
+                            accountId: 199578,
+                            publisherId: 199578,
+                            mediaId: "aaaa1"
+                        }
+                }]
+            }
+        ];
+
+        // ======== DO NOT EDIT BELOW THIS LINE =========== //
+        var googletag = googletag || {};
+        googletag.cmd = googletag.cmd || [];
+        googletag.cmd.push(function () {
+            googletag.pubads().disableInitialLoad();
+        });
+
+        var pbjs = pbjs || {};
+        pbjs.que = pbjs.que || [];
+
+        // ページ側は普通に requestBids を呼ぶだけ。計測タイミング（レイアウト確定待ち）は
+        // RTD モジュールが auctionDelay の枠内で面倒を見る。
+        pbjs.que.push(function () {
+            pbjs.setConfig({
+                debug: true,
+                realTimeData: {
+                    auctionDelay: 300,
+                    dataProviders: [{
+                        name: 'unicornViewability',
+                        waitForIt: true
+                    }]
+                }
+            });
+            pbjs.addAdUnits(adUnits);
+
+            // ortb2Imp に位置情報が注入されたか確認できるようフックを仕込む
+            pbjs.onEvent('beforeRequestBids', function () {
+                console.log('[CHECK] beforeRequestBids adUnits.ortb2Imp:',
+                    pbjs.adUnits.map(function (au) {
+                        return { code: au.code, ortb2Imp: au.ortb2Imp };
+                    }));
+            });
+
+            pbjs.requestBids({
+                bidsBackHandler: function () {
+                    console.log('[CHECK] bidResponses:', pbjs.getBidResponses());
+                    initAdserver();
+                },
+                timeout: PREBID_TIMEOUT
+            });
+        });
+
+        function initAdserver() {
+            if (pbjs.initAdserverSet) return;
+            pbjs.initAdserverSet = true;
+            googletag.cmd.push(function () {
+                pbjs.que.push(function () {
+                    pbjs.setTargetingForGPTAsync();
+                    googletag.pubads().refresh();
+                });
+            });
+        }
+        // in case PBJS doesn't load
+        setTimeout(function () {
+            initAdserver();
+        }, FAILSAFE_TIMEOUT);
+
+        googletag.cmd.push(function () {
+            googletag.defineSlot('/19968336/header-bid-tag-0', ['fluid', [300, 250], [336, 280], [320, 50]], 'div-1').addService(googletag.pubads());
+            googletag.pubads().enableSingleRequest();
+            googletag.enableServices();
+        });
+        googletag.cmd.push(function () {
+            googletag.defineSlot('/19968336/header-bid-tag-1', ['fluid', [300, 250], [336, 280], [320, 50]], 'div-2').addService(googletag.pubads());
+            googletag.pubads().enableSingleRequest();
+            googletag.enableServices();
+        });
+        googletag.cmd.push(function () {
+            googletag.defineSlot('/19968336/header-bid-tag-2', ['fluid', [300, 250], [336, 280], [320, 50]], 'div-3').addService(googletag.pubads());
+            googletag.pubads().enableSingleRequest();
+            googletag.enableServices();
+        });
+
+    </script>
+
+</head>
+
+<body>
+    <h2>UNICORN viewability RTD Example (example2 slots)</h2>
+    <h5>Div-1 (above the fold → pos:1 期待)</h5>
+    <div id='div-1' style='min-width: 300px; min-height: 250px;'>
+        <script type='text/javascript'>
+            googletag.cmd.push(function () {
+                googletag.display('div-1');
+            });
+        </script>
+    </div>
+
+    <br>
+
+    <h5>Div-2 (above the fold → pos:1 期待)</h5>
+    <div id='div-2' style='min-width: 300px; min-height: 250px;'>
+        <script type='text/javascript'>
+            googletag.cmd.push(function () {
+                googletag.display('div-2');
+            });
+        </script>
+    </div>
+
+    <!-- div-3 を画面外(below the fold)に押し下げて pos:3 を検証 -->
+    <div style="height: 1200px;"></div>
+
+    <h5>Div-3 (below the fold → pos:3 期待)</h5>
+    <div id='div-3' style='min-width: 300px; min-height: 250px;'>
+        <script type='text/javascript'>
+            googletag.cmd.push(function () {
+                googletag.display('div-3');
+            });
+        </script>
+    </div>
+
+</body>
+
+</html>
