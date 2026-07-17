@@ -94,13 +94,14 @@ function measureNow(divId) {
   const area = rect.width * rect.height;
   const ratio = area > 0 ? (visW * visH) / area : 0;
 
-  // OpenRTB ad position (imp.banner.pos): 1 = above the fold, 3 = below the fold.
-  // Carried via the standard field, NOT inside ext.adslot.
-  const pos = rect.top < vh ? 1 : 3;
-
   // "fixed/sticky" detection — attention-first wants non-fixed slots
   const cs = window.getComputedStyle(el);
   const fixed = cs.position === 'fixed' || cs.position === 'sticky';
+
+  // OpenRTB ad position (imp.banner.pos), per AdCOM 1.0 Placement Positions:
+  //   2 = Locked (fixed position), 1 = above the fold, 3 = below the fold.
+  // Carried via the standard field; ext.adslot.fixed keeps the raw flag too.
+  const pos = fixed ? 2 : (rect.top < vh ? 1 : 3);
 
   return {
     pos,

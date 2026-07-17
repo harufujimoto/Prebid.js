@@ -14,7 +14,7 @@ values back and forwards them on the wire.
 
 The module measures:
 
-- the standard OpenRTB ad position `ortb2Imp.banner.pos` (1 = above the fold, 3 = below the fold);
+- the standard OpenRTB ad position `ortb2Imp.banner.pos`, per AdCOM 1.0 Placement Positions (2 = locked/fixed, 1 = above the fold, 3 = below the fold);
 - an object `ortb2Imp.ext.data.adslot` holding the slot's visibility ratio, a sticky/fixed flag, its document-relative position and its rendered size.
 
 Measurement runs once, on the animation frame after the DOM is ready, within the
@@ -60,7 +60,7 @@ not yet defined at auction time.
 
 | Field | Type | Unit / range | Meaning |
 |---|---|---|---|
-| `ortb2Imp.banner.pos` | int | OpenRTB AdPosition | 1 = above the fold, 3 = below the fold |
+| `ortb2Imp.banner.pos` | int | AdCOM 1.0 Placement Position | 2 = locked (fixed), 1 = above the fold, 3 = below the fold |
 | `ortb2Imp.ext.data.adslot.ver` | int | — | signal schema version (currently `1`) |
 | `ortb2Imp.ext.data.adslot.ratio` | number | 0.0–1.0 | visible area ratio at measurement time |
 | `ortb2Imp.ext.data.adslot.fixed` | bool | — | slot is `position: fixed` / `sticky` |

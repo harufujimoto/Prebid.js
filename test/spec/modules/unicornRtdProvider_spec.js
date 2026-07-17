@@ -71,6 +71,19 @@ describe('Unicorn RTD submodule', function () {
       });
     });
 
+    it('sets banner.pos = 2 (locked) for a fixed slot', function (done) {
+      const divId = 'uni-rtd-fixed';
+      const el = makeDiv(divId, { top: 20, left: 0, right: 320, bottom: 70, width: 320, height: 50 });
+      el.style.position = 'fixed';
+      const au = adUnit('/1234/fixed', divId);
+
+      unicornSubmodule.getBidRequestData({ adUnits: [au] }, function () {
+        expect(au.ortb2Imp.ext.data.adslot.fixed).to.equal(true);
+        expect(au.ortb2Imp.banner.pos).to.equal(2);
+        done();
+      });
+    });
+
     it('does not inject when the slot element cannot be resolved', function (done) {
       const au = adUnit('/1234/missing', 'uni-rtd-does-not-exist');
 
