@@ -1,6 +1,6 @@
 # Overview
 
-Module Name: Unicorn Viewability Rtd Provider
+Module Name: Unicorn Rtd Provider
 Module Type: Rtd Provider
 Maintainer: service+prebid.js@bulbit.jp
 
@@ -26,7 +26,7 @@ just calls `requestBids()` as usual.
 Build the module together with the RTD core and the Unicorn Bid Adapter:
 
 ```bash
-gulp build --modules=unicornBidAdapter,rtdModule,unicornViewabilityRtdProvider
+gulp build --modules=unicornBidAdapter,rtdModule,unicornRtdProvider
 ```
 
 # Configuration
@@ -36,7 +36,7 @@ pbjs.setConfig({
   realTimeData: {
     auctionDelay: 300,
     dataProviders: [{
-      name: 'unicornViewability',
+      name: 'unicorn',
       waitForIt: true
     }]
   }

@@ -7,7 +7,7 @@
  * This is the "measurement" half of the UNICORN attention-first signal.
  * The "send" half lives in modules/unicornBidAdapter.js.
  *
- * @module modules/unicornViewabilityRtdProvider
+ * @module modules/unicornRtdProvider
  * @requires module:modules/realTimeData
  */
 import { submodule } from '../src/hook.js';
@@ -16,7 +16,7 @@ import { getBoundingClientRect } from '../libraries/boundingClientRect/boundingC
 import { getWinDimensions } from '../src/utils/winDimensions.js';
 import { getGptSlotInfoForAdUnitCode } from '../libraries/gptUtils/gptUtils.js';
 
-const MODULE_NAME = 'unicornViewability';
+const MODULE_NAME = 'unicorn';
 const ORTB2_NAMESPACE = 'unicorn'; // -> ortb2Imp.ext.data.unicorn (adapter re-maps to wire imp.ext.unicorn)
 const SIGNAL_VERSION = 1; // imp.ext.unicorn schema version
 
@@ -159,10 +159,10 @@ function getBidRequestData(reqBidsConfigObj, callback) {
 }
 
 /** @type {import('../modules/rtdModule/index.js').RtdSubmodule} */
-export const unicornViewabilitySubmodule = {
+export const unicornSubmodule = {
   name: MODULE_NAME,
   init,
   getBidRequestData
 };
 
-submodule('realTimeData', unicornViewabilitySubmodule);
+submodule('realTimeData', unicornSubmodule);

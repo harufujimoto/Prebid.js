@@ -47,7 +47,7 @@ function buildOpenRtbBidRequestPayload(validBidRequests, bidderRequest) {
   logInfo('[UNICORN] buildOpenRtbBidRequestPayload.validBidRequests:', validBidRequests);
   logInfo('[UNICORN] buildOpenRtbBidRequestPayload.bidderRequest:', bidderRequest);
   const imp = validBidRequests.map(br => {
-    const unicornViewability = deepAccess(br, 'ortb2Imp.ext.data.unicorn');
+    const unicornSignal = deepAccess(br, 'ortb2Imp.ext.data.unicorn');
     const pos = deepAccess(br, 'ortb2Imp.banner.pos');
     const banner = {
       format: makeFormat(br.sizes),
@@ -64,9 +64,9 @@ function buildOpenRtbBidRequestPayload(validBidRequests, bidderRequest) {
       secure: 1,
       bidfloor: parseFloat(0)
     };
-    if (unicornViewability) {
+    if (unicornSignal) {
       // wire contract: imp.ext.unicorn (flat vendor key, like skadn) — see spec
-      impObj.ext = { unicorn: unicornViewability };
+      impObj.ext = { unicorn: unicornSignal };
     }
     return impObj;
   });
