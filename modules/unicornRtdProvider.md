@@ -15,7 +15,7 @@ values back and forwards them on the wire.
 The module measures:
 
 - the standard OpenRTB ad position `ortb2Imp.banner.pos` (1 = above the fold, 3 = below the fold);
-- a vendor object `ortb2Imp.ext.data.unicorn` holding the slot's visibility ratio, a sticky/fixed flag, its document-relative position and its rendered size.
+- an object `ortb2Imp.ext.data.adslot` holding the slot's visibility ratio, a sticky/fixed flag, its document-relative position and its rendered size.
 
 Measurement runs once, on the animation frame after the DOM is ready, within the
 configured `auctionDelay`. No page-side timing wiring is required — the publisher
@@ -61,16 +61,16 @@ not yet defined at auction time.
 | Field | Type | Unit / range | Meaning |
 |---|---|---|---|
 | `ortb2Imp.banner.pos` | int | OpenRTB AdPosition | 1 = above the fold, 3 = below the fold |
-| `ortb2Imp.ext.data.unicorn.ver` | int | — | signal schema version (currently `1`) |
-| `ortb2Imp.ext.data.unicorn.ratio` | number | 0.0–1.0 | visible area ratio at measurement time |
-| `ortb2Imp.ext.data.unicorn.fixed` | bool | — | slot is `position: fixed` / `sticky` |
-| `ortb2Imp.ext.data.unicorn.x` | int | CSS px, document-relative | slot element left |
-| `ortb2Imp.ext.data.unicorn.y` | int | CSS px, document-relative | slot element top |
-| `ortb2Imp.ext.data.unicorn.w` | int | CSS px | slot element rendered width |
-| `ortb2Imp.ext.data.unicorn.h` | int | CSS px | slot element rendered height |
+| `ortb2Imp.ext.data.adslot.ver` | int | — | signal schema version (currently `1`) |
+| `ortb2Imp.ext.data.adslot.ratio` | number | 0.0–1.0 | visible area ratio at measurement time |
+| `ortb2Imp.ext.data.adslot.fixed` | bool | — | slot is `position: fixed` / `sticky` |
+| `ortb2Imp.ext.data.adslot.x` | int | CSS px, document-relative | slot element left |
+| `ortb2Imp.ext.data.adslot.y` | int | CSS px, document-relative | slot element top |
+| `ortb2Imp.ext.data.adslot.w` | int | CSS px | slot element rendered width |
+| `ortb2Imp.ext.data.adslot.h` | int | CSS px | slot element rendered height |
 
 Coordinates are document-relative (page origin, independent of the scroll
 position) and expressed in CSS pixels.
 
-The Unicorn Bid Adapter forwards this object to the wire as `imp.ext.unicorn`,
+The Unicorn Bid Adapter forwards this object to the wire as `imp.ext.adslot`,
 and the position as `imp.banner.pos`.

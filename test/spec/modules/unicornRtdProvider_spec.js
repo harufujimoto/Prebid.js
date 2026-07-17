@@ -49,13 +49,13 @@ describe('Unicorn RTD submodule', function () {
   });
 
   describe('getBidRequestData', function () {
-    it('injects imp.ext.data.unicorn (ver 1) and banner.pos for a resolvable slot', function (done) {
+    it('injects imp.ext.data.adslot (ver 1) and banner.pos for a resolvable slot', function (done) {
       const divId = 'uni-rtd-slot-1';
       makeDiv(divId, { top: 100, left: 10, right: 310, bottom: 350, width: 300, height: 250 });
       const au = adUnit('/1234/slot-1', divId);
 
       unicornSubmodule.getBidRequestData({ adUnits: [au] }, function () {
-        const signal = au.ortb2Imp.ext.data.unicorn;
+        const signal = au.ortb2Imp.ext.data.adslot;
         expect(signal).to.be.an('object');
         expect(signal.ver).to.equal(1);
         expect(signal.w).to.equal(300);
@@ -64,7 +64,7 @@ describe('Unicorn RTD submodule', function () {
         expect(signal.y).to.equal(100);
         expect(signal.fixed).to.equal(false);
         expect(signal.ratio).to.be.within(0, 1);
-        // position lives in the standard banner.pos, not inside ext.unicorn
+        // position lives in the standard banner.pos, not inside ext.adslot
         expect(signal).to.not.have.property('pos');
         expect(au.ortb2Imp.banner.pos).to.be.oneOf([1, 3]);
         done();
@@ -75,7 +75,7 @@ describe('Unicorn RTD submodule', function () {
       const au = adUnit('/1234/missing', 'uni-rtd-does-not-exist');
 
       unicornSubmodule.getBidRequestData({ adUnits: [au] }, function () {
-        expect(au.ortb2Imp.ext.data.unicorn).to.equal(undefined);
+        expect(au.ortb2Imp.ext.data.adslot).to.equal(undefined);
         done();
       });
     });

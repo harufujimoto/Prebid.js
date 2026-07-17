@@ -1,7 +1,7 @@
 /**
  * This module measures, for each ad slot, its on-screen position and
  * viewability (visible ratio) on the client, and injects the result into
- * `adUnit.ortb2Imp.ext.data.unicorn` so that it flows into every bidder's
+ * `adUnit.ortb2Imp.ext.data.adslot` so that it flows into every bidder's
  * bid request. The UNICORN bid adapter reads it back from `bidRequest.ortb2Imp`.
  *
  * This is the "measurement" half of the UNICORN attention-first signal.
@@ -17,8 +17,8 @@ import { getWinDimensions } from '../src/utils/winDimensions.js';
 import { getGptSlotInfoForAdUnitCode } from '../libraries/gptUtils/gptUtils.js';
 
 const MODULE_NAME = 'unicorn';
-const ORTB2_NAMESPACE = 'unicorn'; // -> ortb2Imp.ext.data.unicorn (adapter re-maps to wire imp.ext.unicorn)
-const SIGNAL_VERSION = 1; // imp.ext.unicorn schema version
+const ORTB2_NAMESPACE = 'adslot'; // -> ortb2Imp.ext.data.adslot (adapter re-maps to wire imp.ext.adslot)
+const SIGNAL_VERSION = 1; // imp.ext.adslot schema version
 
 const CLIENT_SUPPORTS_IO =
   window.IntersectionObserver &&
@@ -95,7 +95,7 @@ function measureNow(divId) {
   const ratio = area > 0 ? (visW * visH) / area : 0;
 
   // OpenRTB ad position (imp.banner.pos): 1 = above the fold, 3 = below the fold.
-  // Carried via the standard field, NOT inside ext.unicorn.
+  // Carried via the standard field, NOT inside ext.adslot.
   const pos = rect.top < vh ? 1 : 3;
 
   // "fixed/sticky" detection — attention-first wants non-fixed slots
@@ -104,7 +104,7 @@ function measureNow(divId) {
 
   return {
     pos,
-    // imp.ext.unicorn payload (ver 1). x/y are document-relative CSS px.
+    // imp.ext.adslot payload (ver 1). x/y are document-relative CSS px.
     signal: {
       ver: SIGNAL_VERSION,
       ratio: measurements[code]?.ratio ?? Number(ratio.toFixed(2)),
@@ -131,7 +131,7 @@ function getBidRequestData(reqBidsConfigObj, callback) {
       const m = measureNow(divId);
       if (m) {
         deepSetValue(adUnit, `ortb2Imp.ext.data.${ORTB2_NAMESPACE}`, m.signal);
-        // standard OpenRTB ad position lives in banner.pos, not in ext.unicorn
+        // standard OpenRTB ad position lives in banner.pos, not in ext.adslot
         deepSetValue(adUnit, 'ortb2Imp.banner.pos', m.pos);
       } else {
         logWarn(`[UNICORN RTD] element not found for adUnit "${adUnit.code}" (divId="${divId}")`);
