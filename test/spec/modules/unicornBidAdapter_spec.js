@@ -551,6 +551,13 @@ describe('unicornBidAdapterTest', () => {
       ];
       assert.deepStrictEqual(reqData, openRTBRequestData);
     });
+    it('sends gpid in imp.ext.gpid when ortb2Imp.ext.gpid is set', () => {
+      const _validBidRequests = utils.deepClone(validBidRequests);
+      _validBidRequests[0].ortb2Imp = { ext: { gpid: '/19968336/header-bid-tag-0#div-1' } };
+      const req = spec.buildRequests(_validBidRequests, bidderRequest);
+      const data = JSON.parse(req.data);
+      expect(data.imp[0].ext.gpid).to.equal('/19968336/header-bid-tag-0#div-1');
+    });
   });
 
   describe('interpretResponse', () => {

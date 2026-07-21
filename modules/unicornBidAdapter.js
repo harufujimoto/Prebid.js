@@ -64,9 +64,19 @@ function buildOpenRtbBidRequestPayload(validBidRequests, bidderRequest) {
       secure: 1,
       bidfloor: parseFloat(0)
     };
+    const ext = {};
     if (adslotSignal) {
       // wire contract: imp.ext.adslot (flat key, received like skadn) — see spec
-      impObj.ext = { adslot: adslotSignal };
+      ext.adslot = adslotSignal;
+    }
+    // GPID (Global Placement ID) — set by the gpid / gptPreAuction module on
+    // ortb2Imp.ext.gpid. alicorn reads it back from imp.ext.gpid.
+    const gpid = deepAccess(br, 'ortb2Imp.ext.gpid');
+    if (gpid) {
+      ext.gpid = gpid;
+    }
+    if (Object.keys(ext).length > 0) {
+      impObj.ext = ext;
     }
     return impObj;
   });
